@@ -1,0 +1,55 @@
+{
+  "generated_at": "2026-06-24T06:24:53.441068+00:00",
+  "source_file": "muasher_full_data.csv",
+  "model_family": "xgboost_regressor_diagnostic",
+  "target": "price_per_sqm",
+  "features": [
+    "district",
+    "property_type",
+    "plan",
+    "area_sqm",
+    "year",
+    "month"
+  ],
+  "notes": [
+    "This diagnostic retrains an in-memory model only; it does not overwrite valuation_model.pkl.",
+    "Time-based validation is the primary production-readiness signal.",
+    "High random-split scores should be treated cautiously when duplicate transactions exist."
+  ],
+  "dataset": {
+    "rows_after_basic_filtering": 4746,
+    "deduplicated_rows": 4746,
+    "duplicate_rows_removed_for_diagnostics": 0,
+    "date_range": {
+      "min": "2019-01-01T00:00:00",
+      "max": "2026-03-08T00:00:00"
+    },
+    "time_split_cutoff": "2025-03-08T00:00:00"
+  },
+  "evaluations": {
+    "deduplicated_random_split": {
+      "train_rows": 3802,
+      "test_rows": 944,
+      "mae_sar_per_sqm": 140.8001211509058,
+      "rmse_sar_per_sqm": 202.6252610514136,
+      "r2": 0.9858456716836655,
+      "mape_percent": 7.761308777656866
+    },
+    "deduplicated_time_split_latest_12_months": {
+      "train_rows": 4035,
+      "test_rows": 711,
+      "mae_sar_per_sqm": 1250.8531756308512,
+      "rmse_sar_per_sqm": 1713.880528057148,
+      "r2": 0.13440350081566466,
+      "mape_percent": 67.38773980330105
+    },
+    "baseline_district_type_median_time_split": {
+      "train_rows": 4035,
+      "test_rows": 711,
+      "mae_sar_per_sqm": 1398.662841068917,
+      "rmse_sar_per_sqm": 1802.9068311213641,
+      "r2": 0.04214235353752571,
+      "mape_percent": 55.46943461054672
+    }
+  }
+}

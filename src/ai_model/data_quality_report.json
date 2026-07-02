@@ -1,0 +1,86 @@
+{
+  "generated_at": "2026-06-24T06:24:53.415953+00:00",
+  "source_file": "muasher_full_data.csv",
+  "rows": 4746,
+  "columns": 12,
+  "date_range": {
+    "min": "2019-01-01T00:00:00",
+    "max": "2026-03-08T00:00:00",
+    "valid_dates": 4746
+  },
+  "city_count": 1,
+  "district_count": 109,
+  "property_type_counts": {
+    "قطعة أرض": 4746
+  },
+  "top_districts": {
+    "الرياض": 266,
+    "جوهرة العروس": 266,
+    "الرحمانية": 222,
+    "الزمرد": 202,
+    "القرينية": 180,
+    "الخليج": 156,
+    "الصالحية": 146,
+    "الفنار": 129,
+    "البشائر": 104,
+    "البحيرات": 91,
+    "الفلاح": 85,
+    "الياقوت": 84,
+    "مريخ": 83,
+    "غليل": 71,
+    "ابحر الشمالية": 69,
+    "الوفاء": 67,
+    "الروضة": 65,
+    "اللؤلؤ": 62,
+    "الشراع": 62,
+    "النزلة الشرقية": 62
+  },
+  "duplicate_rows": 0,
+  "missing_values": {
+    "date": 0,
+    "city": 0,
+    "district": 0,
+    "property_type": 0,
+    "plan": 2804,
+    "parcel": 4032,
+    "total_price": 0,
+    "area_sqm": 0,
+    "price_per_sqm": 0
+  },
+  "quality_flags": {
+    "zero_or_negative_total_price": 31,
+    "zero_or_negative_area": 0,
+    "zero_or_negative_price_per_sqm": 0,
+    "suspect_total_price_vs_area_times_price_per_sqm": 3722,
+    "latest_12_month_rows": 711
+  },
+  "numeric_summary": {
+    "total_price": {
+      "count": 4746,
+      "min": 0.0,
+      "p25": 833.33,
+      "median": 1408.33,
+      "mean": 263765.3954993679,
+      "p75": 5009.98,
+      "max": 13815792.0
+    },
+    "area_sqm": {
+      "count": 4746,
+      "min": 65.63,
+      "p25": 313.0,
+      "median": 588.5,
+      "mean": 677.4247071217868,
+      "p75": 804.0,
+      "max": 29349.0
+    },
+    "price_per_sqm": {
+      "count": 4746,
+      "min": 505.56,
+      "p25": 1022.22,
+      "median": 2000.0,
+      "mean": 2544.0906826801515,
+      "p75": 3888.89,
+      "max": 7528.83
+    }
+  }
+}

@@ -1,6 +1,5 @@
 /* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
-@import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
 
 /* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
 @import 'tailwindcss/base';
@@ -12,35 +11,110 @@
 body {
   direction: rtl;
   font-family: 'Cairo', sans-serif;
-  background-color: #F8FAFC;
+  background:
+    radial-gradient(circle at top right, rgba(5, 150, 105, 0.10), transparent 34rem),
+    linear-gradient(180deg, #f8fafc 0%, #eef6f2 100%);
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-/* Custom scrollbar for a cleaner look */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+
+:root {
+  --muasher-emerald: #047857;
+  --muasher-emerald-dark: #064e3b;
+  --muasher-navy: #0f1f3a;
+  --muasher-gold: #b7791f;
+  --muasher-line: #dbe7e2;
+  --muasher-muted: #64748b;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+
+@layer components {
+  .surface-page {
+    @apply min-h-screen bg-[radial-gradient(circle_at_top_right,rgba(5,150,105,0.10),transparent_34rem),linear-gradient(180deg,#f8fafc_0%,#eef6f2_100%)] text-slate-950;
+  }
+
+  .premium-shell {
+    @apply rounded-2xl border border-emerald-950/10 bg-white/90 shadow-xl shadow-emerald-950/5 backdrop-blur;
+  }
+
+  .premium-card {
+    @apply rounded-2xl border border-emerald-950/10 bg-white/95 p-5 shadow-lg shadow-emerald-950/5 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-950/10;
+  }
+
+  .premium-kpi {
+    @apply rounded-2xl border border-emerald-950/10 bg-gradient-to-br from-white to-emerald-50/70 p-5 shadow-lg shadow-emerald-950/5;
+  }
+
+  .primary-button {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-black text-white shadow-lg shadow-emerald-700/20 transition hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-200;
+  }
+
+  .secondary-button {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-900/15 bg-white px-5 py-3 text-sm font-black text-slate-900 transition hover:border-emerald-700 hover:text-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-100;
+  }
+
+  .field-input {
+    @apply mt-2 w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm font-bold text-slate-950 outline-none transition focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100 read-only:bg-slate-100;
+  }
+
+  .status-badge {
+    @apply rounded-full px-3 py-1 text-xs font-black;
+  }
 }
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+/* Mapbox overrides */
+.mapboxgl-ctrl-group { border-radius: 12px !important; overflow: hidden; }
+.mapboxgl-ctrl-group button { width: 36px !important; height: 36px !important; }
+
+/* Fix select option colors for dark theme */
+select option {
+  background: #1e293b;
+  color: #e2e8f0;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+
+[dir="rtl"] {
+  unicode-bidi: isolate;
 }
-/* Leaflet overrides for RTL if needed */
-.leaflet-container {
-  font-family: 'Cairo', sans-serif;
+
+[dir="ltr"] {
+  unicode-bidi: isolate;
 }
-.leaflet-popup-content-wrapper {
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-.leaflet-popup-content {
-  margin: 0;
-  line-height: normal;
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
+  main {
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+  .report-card,
+  table,
+  .recharts-responsive-container {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .rounded-lg {
+    box-shadow: none !important;
+  }
 }

@@ -1,0 +1,110 @@
+{
+  "valuation": {
+    "neighborhood": "الشاطئ",
+    "property_type": "قطعة أرض",
+    "area": 625.0,
+    "current_price_per_meter": 1580.89,
+    "total_current_price": 988056.34,
+    "predicted_price_per_meter_1year": 1897.07,
+    "total_predicted_price_1year": 1185667.6,
+    "annual_growth_rate_percentage": 20.0,
+    "market_avg_price_per_meter": 6250.0,
+    "market_min_price_per_meter": 6250.0,
+    "market_max_price_per_meter": 6250.0,
+    "confidence": "متوسطة",
+    "market_insight": "حي الشاطئ يشهد طفرة عقارية ونمو سريع جداً، فرصة استثمارية ممتازة."
+  },
+  "regulations": {
+    "zone_type": "سكني فاخر",
+    "max_floors": 4,
+    "max_height_meters": 16,
+    "building_ratio_percent": 50,
+    "floor_area_ratio": 2.0,
+    "front_setback_meters": 4,
+    "side_setback_meters": 2,
+    "rear_setback_meters": 3,
+    "min_parking_per_unit": 2,
+    "min_lot_area_sqm": 400,
+    "max_lot_coverage_percent": 55,
+    "basement_allowed": true,
+    "mezzanine_allowed": false,
+    "rooftop_usage_percent": 20,
+    "notes": "منطقة فلل فاخرة - اشتراطات تصميمية مشددة",
+    "source": "بيانات مخصصة للحي"
+  },
+  "building_potential": {
+    "land_area_sqm": 625.0,
+    "ground_floor_buildable_sqm": 312.5,
+    "max_floors": 4,
+    "effective_floors": 4,
+    "total_built_area_sqm": 1250.0,
+    "floor_area_ratio": 2.0,
+    "estimated_residential_units": 10,
+    "parking_required": 20,
+    "setbacks": {
+      "front_m": 4,
+      "side_m": 2,
+      "rear_m": 3
+    },
+    "basement_allowed": true,
+    "max_height_meters": 16
+  },
+  "feasibility": {
+    "costs": {
+      "land_cost": 988056,
+      "construction_cost": 3125000,
+      "construction_cost_per_sqm": 2500,
+      "design_permits": 156250,
+      "infrastructure": 250000,
+      "contingency": 312500,
+      "total_project_cost": 4831806,
+      "finish_level": "تشطيب متوسط"
+    },
+    "revenue": {
+      "rental_rate_per_sqm": 700,
+      "occupancy_rate_percent": 90,
+      "gross_annual_rental": 875000,
+      "effective_annual_rental": 787500,
+      "annual_maintenance": 144954,
+      "annual_management_fee": 63000,
+      "net_annual_income": 579546
+    },
+    "performance": {
+      "roi_percent": 11.99,
+      "payback_years": 8.3,
+      "cap_rate_percent": 11.99,
+      "future_value_5y": 6166745,
+      "total_return_5y": 4232668,
+      "total_return_5y_percent": 87.6
+    },
+    "swot": {
+      "strengths": [
+        "عائد استثماري مرتفع يتجاوز متوسط السوق",
+        "إيجارات مرتفعة تعكس طلباً قوياً على المنطقة",
+        "فترة استرداد معقولة للمشروع",
+        "موقع في حي الشاطئ بمدينة جدة — سوق عقاري نشط"
+      ],
+      "weaknesses": [
+        "تكاليف البناء في ارتفاع مستمر"
+      ],
+      "opportunities": [
+        "رؤية 2030 تدعم النمو العقاري في جدة",
+        "مشاريع البنية التحتية الجديدة (مترو جدة، الواجهة البحرية)",
+        "حي الشاطئ ضمن مناطق إعادة التطوير المستهدفة",
+        "تزايد الطلب على الإسكان بسبب النمو السكاني"
+      ],
+      "threats": [
+        "تقلبات أسعار مواد البناء",
+        "تغييرات محتملة في الأنظمة والاشتراطات",
+        "منافسة من المشاريع الكبرى (روشن، NHC)"
+      ]
+    },
+    "recommendation": {
+      "verdict": "استثمار ممتاز",
+      "color": "green",
+      "details": "المشروع يحقق عوائد استثنائية مع فترة استرداد قصيرة. يُنصح بشدة بالمضي في الاستثمار.",
+      "score": 9
+    }
+  },
+  "generated_at": "2026-05-05T16:03:44.600485"
+}

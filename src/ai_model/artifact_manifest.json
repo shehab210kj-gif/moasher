@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-06-24T06:24:54.413058+00:00",
+  "base_dir": "F:\\moaasher web\\src\\ai_model",
+  "files": [
+    {
+      "path": "muasher_full_data.csv",
+      "exists": true,
+      "size_bytes": 697090,
+      "sha256": "9ca5591e227264d2a725abee869e1b4ab5db5413e355de1e1725ee5fe779b88a"
+    },
+    {
+      "path": "valuation_model.pkl",
+      "exists": true,
+      "size_bytes": 3635663,
+      "sha256": "313669e56f53957a89a36e567e0bf26771f60607bdd531a8a58681c5fc134ba6"
+    },
+    {
+      "path": "valuation_model.xgb.json",
+      "exists": true,
+      "size_bytes": 5100758,
+      "sha256": "73f3b512a6593488e1fc715ad659930cf1994ba315cbdf1035fdcf27f94a7d0c"
+    },
+    {
+      "path": "le_neighborhood.pkl",
+      "exists": true,
+      "size_bytes": 2514,
+      "sha256": "a7ccad248db83c9975a228b882331dce555a2a5790614bf9f440a541d390ceb2"
+    },
+    {
+      "path": "le_type.pkl",
+      "exists": true,
+      "size_bytes": 490,
+      "sha256": "9a9b42442788f7fcedb4bfd340c1aac1c171623ea82e002b06c215f1a8fd45a7"
+    },
+    {
+      "path": "le_plan.pkl",
+      "exists": true,
+      "size_bytes": 6542,
+      "sha256": "7af82e2f967819f70b1eebcdd36d29358fce5d7c17ccf3a383e8199e70271ba7"
+    },
+    {
+      "path": "plan_defaults.json",
+      "exists": true,
+      "size_bytes": 3681,
+      "sha256": "e8683e626c1c1258282b5e0d6dcb25417476f9626d348f833f3b1a7ca5664700"
+    },
+    {
+      "path": "prediction_stats.json",
+      "exists": true,
+      "size_bytes": 1757,
+      "sha256": "79e9db7ff2d408e9c5b7936f58910fc8f0492b03a6d5a12bcf2d84fb603bd98a"
+    },
+    {
+      "path": "training_metadata.json",
+      "exists": true,
+      "size_bytes": 2287,
+      "sha256": "f40e557e52c37b06ee6bfdfcb33377a8f92f5ad219d80f82ed64efe6b16ca6fa"
+    },
+    {
+      "path": "data_quality_report.json",
+      "exists": true,
+      "size_bytes": 2059,
+      "sha256": "c09d3c522f010751d977061dc5c7bc6aabb8773e34bae2131c4579184a37cf60"
+    },
+    {
+      "path": "model_metrics.json",
+      "exists": true,
+      "size_bytes": 1730,
+      "sha256": "29d1c5643f47cde24a399c223c3054c25c98f8b390dd912711bc71e05ffc8367"
+    },
+    {
+      "path": "forecast_metrics.json",
+      "exists": true,
+      "size_bytes": 7673,
+      "sha256": "69a62e83b11626f82092a1ee80e0b21cfc086bcb0c63b22de844b6e3e980b7a2"
+    }
+  ],
+  "dependencies": {
+    "python": "3.14.5",
+    "pandas": "3.0.3",
+    "numpy": "2.4.6",
+    "scikit-learn": "1.8.0",
+    "xgboost": "3.2.0",
+    "joblib": "1.5.3",
+    "fastapi": "0.136.3"
+  }
+}

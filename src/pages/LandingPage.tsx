@@ -1,357 +1,303 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
+  ArrowLeft,
   BarChart3,
+  Check,
+  FileText,
+  Gauge,
+  LineChart,
+  MapPinned,
+  ShieldAlert,
+  Sparkles,
+  Target,
   TrendingUp,
-  Search,
-  MapPin,
-  Home,
-  Maximize2,
-  ArrowRight,
-  ShieldCheck,
-  AlertCircle,
-  Loader2,
-  ChevronDown
+  Users,
 } from 'lucide-react';
+import { formatSar } from '../lib/muasher';
+import { useI18n } from '../lib/i18n';
 
-const API_BASE_URL = 'http://localhost:8000';
+type PublicPage = 'landing' | 'features' | 'use-cases' | 'pricing' | 'login' | 'register';
 
-// هاردكود لبعض الأحياء كـ Fallback في حال فشل الـ API أو التأخر في التحميل
-const DEFAULT_NEIGHBORHOODS = [
-  "الياقوت", "الرياض", "أبحر الشمالية", "الحمدانية", "جوهرة العروس", 
-  "المنار", "الزهراء", "السلامة", "المحمدية", "البساتين", "السامر", "النعيم"
-];
+const marketingPreview = {
+  investmentScore: 82,
+  fairValueMin: 1450000,
+  fairValueMax: 1680000,
+  roiPercentage: 18.4,
+};
 
-const DEFAULT_TYPES = ["قطعة أرض", "شقة"];
-
-export function LandingPage() {
-  const [neighborhoods, setNeighborhoods] = useState<string[]>(DEFAULT_NEIGHBORHOODS);
-  const [propertyTypes, setPropertyTypes] = useState<string[]>(DEFAULT_TYPES);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<any>(null);
-
-  // Form State
-  const [form, setForm] = useState({
-    neighborhood: '',
-    property_type: '',
-    area: ''
-  });
-
-  // Result State
-  const [result, setResult] = useState<any>(null);
-
-  useEffect(() => {
-    fetchInitialData();
-  }, []);
-
-  const fetchInitialData = async () => {
-    try {
-      const [nRes, tRes, sRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/neighborhoods`),
-        fetch(`${API_BASE_URL}/property-types`),
-        fetch(`${API_BASE_URL}/market-stats`)
-      ]);
-
-      const nData = await nRes.json();
-      const tData = await tRes.json();
-      const sData = await sRes.json();
-
-      if (nData.neighborhoods && nData.neighborhoods.length > 0) {
-        setNeighborhoods(nData.neighborhoods);
-      }
-      if (tData.property_types && tData.property_types.length > 0) {
-        setPropertyTypes(tData.property_types);
-      }
-      setStats(sData);
-    } catch (err) {
-      console.error('Failed to fetch data from API, using defaults', err);
-    }
-  };
-
-  const handleValuate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.neighborhood || !form.property_type || !form.area) {
-      setError('يرجى إكمال جميع الحقول');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    setResult(null);
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/valuate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          neighborhood: form.neighborhood,
-          property_type: form.property_type,
-          area: parseFloat(form.area)
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'حدث خطأ في التقييم');
-      }
-
-      const data = await response.json();
-      setResult(data);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+export function LandingPage({ page }: { page: PublicPage }) {
+  const { dir } = useI18n();
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-cairo text-right" dir="rtl">
-      {/* Premium Navbar */}
-      <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-brand-600 to-brand-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-brand-600/20">
-                <BarChart3 size={24} />
-              </div>
-              <span className="text-2xl font-black text-slate-900 tracking-tight">
-                مؤشر <span className="text-brand-600 text-sm font-bold uppercase tracking-widest bg-brand-50 px-2 py-1 rounded-lg mr-2">AI</span>
-              </span>
-            </div>
-            
-            <div className="flex items-center gap-6">
-              <span className="hidden md:block text-slate-500 font-medium text-sm">
-                المحرك العقاري الأذكى في جدة
-              </span>
-              <div className="h-4 w-[1px] bg-slate-200 hidden md:block" />
-              <div className="flex items-center gap-2 text-brand-600 font-bold">
-                <ShieldCheck size={20} />
-                <span className="text-sm">بيانات موثوقة</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-12 gap-12 items-start">
-            
-            {/* Right Side: Title & Info */}
-            <div className="lg:col-span-5 space-y-8">
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-sm font-bold mb-6 border border-brand-100">
-                  <TrendingUp size={16} />
-                  <span>متاح الآن لمدينة جدة</span>
-                </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 leading-[1.2] mb-6">
-                  قيّم عقارك <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-l from-brand-600 to-brand-400">
-                    بذكاء اصطناعي دقيق
-                  </span>
-                </h1>
-                <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-lg">
-                  أدخل بيانات العقار واحصل على تقييم فوري بناءً على آخر صفقات السوق في جدة، مع توقعات سعرية للسنة القادمة بنسبة دقة عالية.
-                </p>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                    <div className="text-3xl font-black text-brand-600 mb-1">
-                      {stats ? `${(stats.total_transactions / 1000).toFixed(1)}k+` : '...'}
-                    </div>
-                    <div className="text-sm text-slate-500 font-bold">صفقة عقارية</div>
-                  </div>
-                  <div className="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                    <div className="text-3xl font-black text-brand-600 mb-1">
-                      {stats ? stats.total_neighborhoods : '...'}
-                    </div>
-                    <div className="text-sm text-slate-500 font-bold">حي مدعوم</div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Left Side: Tool */}
-            <div className="lg:col-span-7">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-2xl shadow-slate-200/50 border border-white relative overflow-hidden"
-              >
-                {/* Decorative background element */}
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-400 via-brand-600 to-brand-400 opacity-50" />
-                
-                <form onSubmit={handleValuate} className="space-y-6 relative z-10">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Neighborhood Selection */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-black text-slate-700 mr-2">الحي في جدة</label>
-                      <div className="relative group">
-                        <MapPin className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-600 transition-colors" size={20} />
-                        <select
-                          value={form.neighborhood}
-                          onChange={(e) => setForm({ ...form, neighborhood: e.target.value })}
-                          className="w-full bg-slate-50 border-2 border-slate-100 focus:border-brand-500 focus:bg-white rounded-2xl py-4 pr-12 pl-4 text-slate-900 font-bold appearance-none outline-none transition-all cursor-pointer"
-                        >
-                          <option value="">اختر الحي...</option>
-                          {neighborhoods.map((n) => (
-                            <option key={n} value={n}>{n}</option>
-                          ))}
-                        </select>
-                        <ChevronDown className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
-                      </div>
-                    </div>
-
-                    {/* Property Type */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-black text-slate-700 mr-2">نوع العقار</label>
-                      <div className="relative group">
-                        <Home className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-600 transition-colors" size={20} />
-                        <select
-                          value={form.property_type}
-                          onChange={(e) => setForm({ ...form, property_type: e.target.value })}
-                          className="w-full bg-slate-50 border-2 border-slate-100 focus:border-brand-500 focus:bg-white rounded-2xl py-4 pr-12 pl-4 text-slate-900 font-bold appearance-none outline-none transition-all cursor-pointer"
-                        >
-                          <option value="">اختر النوع...</option>
-                          {propertyTypes.map((t) => (
-                            <option key={t} value={t}>{t}</option>
-                          ))}
-                        </select>
-                        <ChevronDown className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Area Input */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-black text-slate-700 mr-2">المساحة (متر مربع)</label>
-                    <div className="relative group">
-                      <Maximize2 className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-600 transition-colors" size={20} />
-                      <input
-                        type="number"
-                        placeholder="مثال: 500"
-                        value={form.area}
-                        onChange={(e) => setForm({ ...form, area: e.target.value })}
-                        className="w-full bg-slate-50 border-2 border-slate-100 focus:border-brand-500 focus:bg-white rounded-2xl py-4 pr-12 pl-4 text-slate-900 font-bold outline-none transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full py-5 bg-slate-900 hover:bg-brand-600 text-white rounded-2xl font-black text-lg transition-all shadow-xl hover:shadow-brand-600/30 flex items-center justify-center gap-3 group relative overflow-hidden"
-                  >
-                    {loading ? (
-                      <Loader2 className="animate-spin" />
-                    ) : (
-                      <>
-                        <span>احسب القيمة الآن</span>
-                        <ArrowRight size={22} className="group-hover:-translate-x-2 transition-transform" />
-                      </>
-                    )}
-                  </button>
-
-                  <AnimatePresence>
-                    {error && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="p-4 bg-red-50 text-red-600 rounded-xl flex items-center gap-3 font-bold border border-red-100"
-                      >
-                        <AlertCircle size={20} />
-                        <span>{error}</span>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </form>
-
-                {/* Results Section */}
-                <AnimatePresence>
-                  {result && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="mt-12 pt-12 border-t border-slate-100 grid md:grid-cols-2 gap-8"
-                    >
-                      <div className="space-y-6">
-                        <div>
-                          <div className="text-slate-500 font-bold text-sm mb-1">السعر التقديري الحالي</div>
-                          <div className="text-5xl font-black text-slate-900">
-                            {result.total_current_price.toLocaleString()} <span className="text-xl text-brand-600">ر.س</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex gap-10">
-                          <div>
-                            <div className="text-slate-500 font-bold text-xs mb-1">سعر المتر</div>
-                            <div className="text-xl font-black text-slate-800">{result.current_price_per_meter.toLocaleString()} ر.س</div>
-                          </div>
-                          <div>
-                            <div className="text-slate-500 font-bold text-xs mb-1">درجة الثقة</div>
-                            <div className={`text-xl font-black ${result.confidence === 'عالية جداً' ? 'text-green-600' : 'text-amber-500'}`}>
-                              {result.confidence}
-                            </div>
-                          </div>
-                          <div className="border-r border-slate-100 pr-10">
-                            <div className="text-slate-500 font-bold text-xs mb-1">نطاق سعر الحي</div>
-                            <div className="text-md font-black text-slate-700">
-                              {result.market_min_price_per_meter.toLocaleString()} - {result.market_max_price_per_meter.toLocaleString()}
-                              <span className="text-xs text-slate-400 mr-1">ر.س</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="bg-brand-600 p-6 rounded-3xl text-white shadow-xl shadow-brand-600/20 flex flex-col justify-between relative overflow-hidden group">
-                        <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
-                        <div className="relative z-10">
-                          <div className="flex items-center gap-2 mb-4">
-                            <TrendingUp size={20} className="text-brand-200" />
-                            <span className="font-black text-sm uppercase tracking-wider opacity-90">توقعات السنة القادمة</span>
-                          </div>
-                          <div className="text-sm font-bold opacity-80 mb-1">السعر المتوقع (أبريل 2027)</div>
-                          <div className="text-3xl font-black mb-2">
-                            {result.total_predicted_price_1year.toLocaleString()} ر.س
-                          </div>
-                          <div className="text-xs font-medium bg-white/20 inline-block px-3 py-1 rounded-full">
-                            {stats?.annual_growth_rate > 0 ? 'ارتفاع' : 'تذبذب'} متوقع بنسبة {(((result.total_predicted_price_1year - result.total_current_price) / result.total_current_price) * 100).toFixed(1)}% لعام 2027
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-12">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center text-white">
-              <BarChart3 size={18} />
-            </div>
-            <span className="text-xl font-black text-slate-900 tracking-tight">مؤشر</span>
-          </div>
-          <p className="text-slate-500 text-sm font-medium mb-2">
-            منصة "مؤشر" تعتمد على نماذج تعلم آلي متطورة. النتائج هي تقديرات استرشادية ولا تغني عن المثمن العقاري المعتمد.
-          </p>
-          <div className="text-slate-400 text-xs">
-            جميع الحقوق محفوظة © {new Date().getFullYear()} منصة مؤشر
-          </div>
-        </div>
-      </footer>
+    <div className="surface-page" dir={dir}>
+      <PublicNav />
+      {page === 'landing' && <LandingContent />}
+      {page === 'features' && <FeaturesContent />}
+      {page === 'use-cases' && <UseCasesContent />}
+      {page === 'pricing' && <PricingContent />}
+      <Footer />
     </div>
+  );
+}
+
+function PublicNav() {
+  const { t } = useI18n();
+  return (
+    <header className="sticky top-0 z-40 border-b border-emerald-950/10 bg-white/85 backdrop-blur-xl">
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
+        <Link to="/" className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-700 to-emerald-950 text-white shadow-lg shadow-emerald-900/20">
+            <Target size={21} />
+          </span>
+          <div>
+            <span className="block text-lg font-black text-slate-950">{t('appName')}</span>
+            <span className="block text-[11px] font-bold text-emerald-700">Real Estate Intelligence</span>
+          </div>
+        </Link>
+        <nav className="hidden items-center gap-6 text-sm font-bold text-slate-600 md:flex">
+          <Link to="/features" className="hover:text-emerald-800">{t('navFeatures')}</Link>
+          <Link to="/use-cases" className="hover:text-emerald-800">{t('navUseCases')}</Link>
+          <Link to="/pricing" className="hover:text-emerald-800">{t('navPricing')}</Link>
+          <Link to="/sample-report" className="hover:text-emerald-800">{t('navSampleReport')}</Link>
+        </nav>
+        <div className="flex items-center gap-2">
+          <Link to="/login" className="hidden px-4 py-2 text-sm font-bold text-slate-600 hover:text-emerald-800 sm:block">{t('navLogin')}</Link>
+          <Link to="/app/new-analysis" className="primary-button">
+            {t('navGenerate')}
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function LandingContent() {
+  const { t } = useI18n();
+  return (
+    <main>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-emerald-900/10 to-transparent" />
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_500px] lg:py-24">
+          <div className="flex flex-col justify-center">
+            <p className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-black text-emerald-800">
+              <Sparkles size={14} /> {t('heroEyebrow')}
+            </p>
+            <h1 className="max-w-4xl text-4xl font-black leading-tight text-slate-950 sm:text-6xl">
+              {t('heroTitle')}
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg font-bold leading-9 text-slate-600">
+              {t('heroSubtitle')}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/app/new-analysis" className="primary-button">
+                {t('heroPrimary')} <ArrowLeft size={16} />
+              </Link>
+              <Link to="/sample-report" className="secondary-button">
+                {t('heroSecondary')}
+              </Link>
+            </div>
+            <TrustStrip />
+          </div>
+          <ReportPreview />
+        </div>
+      </section>
+
+      <Section title={t('sectionReportTitle')} subtitle={t('sectionReportSubtitle')}>
+        <div className="grid gap-4 md:grid-cols-3">
+          <FeatureCard title={t('featureFairValue')} body={t('featureFairValueBody')} icon={Gauge} />
+          <FeatureCard title={t('featureComparable')} body={t('featureComparableBody')} icon={BarChart3} />
+          <FeatureCard title={t('featureMemo')} body={t('featureMemoBody')} icon={FileText} />
+        </div>
+      </Section>
+
+      <Section title={t('sectionHowTitle')} subtitle={t('sectionHowSubtitle')}>
+        <div className="grid gap-4 md:grid-cols-3">
+          {[t('stepData'), t('stepAnalyze'), t('stepReport')].map((step, index) => (
+            <div key={step} className="premium-card">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-700 text-sm font-black text-white">{index + 1}</div>
+              <h3 className="text-lg font-black text-slate-950">{step}</h3>
+              <p className="mt-3 text-sm font-bold leading-7 text-slate-600">{t('sectionHowSubtitle')}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <PricingContent compact />
+
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6">
+        <div className="premium-shell overflow-hidden bg-gradient-to-br from-emerald-900 to-slate-950 p-8 text-white md:p-10">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-black">{t('ctaTitle')}</h2>
+            <p className="mt-3 text-base font-bold leading-8 text-emerald-50">{t('ctaBody')}</p>
+            <Link to="/app/new-analysis" className="mt-6 inline-flex rounded-xl bg-white px-5 py-3 text-sm font-black text-emerald-900">
+              {t('heroPrimary')}
+            </Link>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function TrustStrip() {
+  const { t } = useI18n();
+  const items = [
+    ['+9,900', t('transactions')],
+    ['82%', t('investmentScore')],
+    ['< 3m', t('stepReport')],
+  ];
+  return (
+    <div className="mt-10 grid max-w-xl grid-cols-3 gap-3">
+      {items.map(([value, label]) => (
+        <div key={label} className="rounded-2xl border border-emerald-900/10 bg-white/75 p-4 shadow-sm">
+          <div className="text-2xl font-black text-emerald-800">{value}</div>
+          <div className="mt-1 text-xs font-bold text-slate-500">{label}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FeaturesContent() {
+  const { t } = useI18n();
+  const features = [
+    [t('featureFairValue'), t('featureFairValueBody'), LineChart],
+    [t('featureComparable'), t('featureComparableBody'), BarChart3],
+    [t('featureRisk'), t('featureRiskBody'), ShieldAlert],
+    [t('featureMap'), t('featureMapBody'), MapPinned],
+    [t('featureReports'), t('featureReportsBody'), FileText],
+    [t('featureMemo'), t('featureMemoBody'), Users],
+  ];
+  return (
+    <Section title={t('sectionFeaturesTitle')} subtitle={t('sectionFeaturesSubtitle')}>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {features.map(([title, body, Icon]) => (
+          <FeatureCard key={title as string} title={title as string} body={body as string} icon={Icon as typeof Target} />
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function UseCasesContent() {
+  const { t } = useI18n();
+  const cases = [
+    ['المكاتب العقارية', 'إعداد تقارير احترافية للعملاء ودعم التفاوض بأدلة سوقية.'],
+    ['المستثمرون', 'فهم عدالة السعر ومخاطر الصفقة قبل الالتزام برأس المال.'],
+    ['المطورون العقاريون', 'تحليل الاستخدام الأعلى والأفضل ومقارنة سيناريوهات التطوير.'],
+    ['فرق الاستثمار', 'توحيد منهجية دراسة الفرص ورفع جودة قرارات اللجان.'],
+  ];
+  return (
+    <Section title={t('navUseCases')} subtitle={t('sectionFeaturesSubtitle')}>
+      <div className="grid gap-4 md:grid-cols-2">
+        {cases.map(([title, body]) => (
+          <div key={title} className="premium-card p-7">
+            <h3 className="text-xl font-black text-slate-950">{title}</h3>
+            <p className="mt-3 text-sm font-bold leading-7 text-slate-600">{body}</p>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function PricingContent({ compact = false }: { compact?: boolean }) {
+  const { t } = useI18n();
+  const plans = [
+    ['مجاني', '0 ر.س', ['تقريران شهريًا', 'تقييم أساسي', 'مقارنة سوقية أساسية']],
+    ['احترافي', '199 ر.س/شهر', ['20 تقريرًا شهريًا', 'تصدير PDF', 'توصية ذكية', 'تحليل مخاطر']],
+    ['أعمال', '499 ر.س/شهر', ['100 تقرير شهريًا', 'هوية الشركة', 'تقارير متقدمة', 'دعم أولوية']],
+    ['مؤسسي', 'حسب الطلب', ['تقارير مخصصة', 'تكامل API', 'مصادر بيانات خاصة', 'لوحة مخصصة']],
+  ];
+  return (
+    <Section title={compact ? t('sectionPricingTitle') : t('navPricing')} subtitle={t('sectionPricingSubtitle')}>
+      <div className="grid gap-4 lg:grid-cols-4">
+        {plans.map(([name, price, items]) => (
+          <div key={name as string} className="premium-card p-6">
+            <h3 className="text-lg font-black text-slate-950">{name}</h3>
+            <div className="mt-3 text-2xl font-black text-emerald-800">{price}</div>
+            <ul className="mt-6 space-y-3">
+              {(items as string[]).map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm font-bold text-slate-600">
+                  <Check size={16} className="mt-0.5 shrink-0 text-emerald-600" /> {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function ReportPreview() {
+  const { t } = useI18n();
+  return (
+    <div className="premium-shell relative overflow-hidden p-4">
+      <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-emerald-200/50 blur-3xl" />
+      <div className="relative rounded-2xl bg-white p-6">
+        <div className="flex items-center justify-between border-b border-emerald-950/10 pb-4">
+          <div>
+            <p className="text-xs font-black uppercase text-emerald-700">{t('previewTitle')}</p>
+            <h2 className="mt-1 text-xl font-black text-slate-950">{t('previewDistrict')}</h2>
+          </div>
+          <span className="status-badge bg-amber-100 text-amber-800">{t('previewRecommendation')}</span>
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          <MiniStat label={t('investmentScore')} value={`${marketingPreview.investmentScore}/100`} />
+          <MiniStat label={t('riskLevel')} value="متوسط" />
+          <MiniStat label={t('fairRange')} value={`${formatSar(marketingPreview.fairValueMin)} - ${formatSar(marketingPreview.fairValueMax)}`} wide />
+          <MiniStat label={t('marketPosition')} value="ضمن النطاق" />
+          <MiniStat label={t('roiEstimate')} value={`${marketingPreview.roiPercentage}%`} />
+        </div>
+        <div className="mt-6 h-28 rounded-2xl bg-gradient-to-l from-emerald-800 to-slate-900 p-4 text-white">
+          <div className="flex items-center gap-2 text-xs font-black text-emerald-100"><TrendingUp size={16} /> Market Signal</div>
+          <p className="mt-3 text-sm font-bold leading-6">{t('previewMemo')}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FeatureCard({ title, body, icon: Icon }: { title: string; body: string; icon: typeof Target }) {
+  return (
+    <div className="premium-card">
+      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-800">
+        <Icon size={21} />
+      </div>
+      <h3 className="text-lg font-black text-slate-950">{title}</h3>
+      <p className="mt-3 text-sm font-bold leading-7 text-slate-600">{body}</p>
+    </div>
+  );
+}
+
+function Section({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+      <div className="mb-8 max-w-3xl">
+        <h2 className="text-3xl font-black text-slate-950">{title}</h2>
+        <p className="mt-3 text-base font-bold leading-8 text-slate-600">{subtitle}</p>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function MiniStat({ label, value, wide = false }: { label: string; value: string; wide?: boolean }) {
+  return (
+    <div className={`rounded-2xl border border-emerald-950/10 bg-emerald-50/60 p-3 ${wide ? 'col-span-2' : ''}`}>
+      <div className="text-[11px] font-black uppercase text-slate-500">{label}</div>
+      <div className="mt-1 text-sm font-black text-slate-950">{value}</div>
+    </div>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="border-t border-emerald-950/10 bg-white/70 px-4 py-8">
+      <div className="mx-auto max-w-7xl text-sm font-bold leading-6 text-slate-500">
+        مؤشر AI منصة دعم قرار وليست تقييمًا عقاريًا معتمدًا. يرجى مراجعة مختص مرخص قبل اتخاذ قرار الشراء.
+      </div>
+    </footer>
   );
 }

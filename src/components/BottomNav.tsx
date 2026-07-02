@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Map, TableProperties, User } from 'lucide-react';
 export function BottomNav() {

@@ -24,15 +24,23 @@ def evaluate():
         valuation_model = joblib.load(os.path.join(BASE_DIR, 'valuation_model.pkl'))
         le_neighborhood = joblib.load(os.path.join(BASE_DIR, 'le_neighborhood.pkl'))
         le_type = joblib.load(os.path.join(BASE_DIR, 'le_type.pkl'))
+        le_plan = joblib.load(os.path.join(BASE_DIR, 'le_plan.pkl'))
     except Exception as e:
         print(f"Error loading models: {e}")
         return
 
     # 3. Prepare Data
+    df['التاريخ'] = pd.to_datetime(df['التاريخ'], errors='coerce')
+    df = df.dropna(subset=['التاريخ', 'الحي', 'نوع العقار', 'المساحة (م2)', 'سعر المتر'])
+    df['المخطط'] = df['المخطط'].fillna('غير محدد')
+
+    df['year'] = df['التاريخ'].dt.year
+    df['month'] = df['التاريخ'].dt.month
     df['neighborhood_encoded'] = le_neighborhood.transform(df['الحي'])
     df['type_encoded'] = le_type.transform(df['نوع العقار'])
-    
-    X = df[['neighborhood_encoded', 'type_encoded', 'المساحة']]
+    df['plan_encoded'] = le_plan.transform(df['المخطط'])
+
+    X = df[['neighborhood_encoded', 'type_encoded', 'المساحة (م2)', 'plan_encoded', 'year', 'month']]
     y = df['سعر المتر']
     
     # Split data using the same random state as in training to get the same test set
