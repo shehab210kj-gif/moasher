@@ -9,6 +9,7 @@ Financial Feasibility Engine
 - فترة الاسترداد
 - تحليل SWOT مبسط
 """
+from typing import Optional
 
 # متوسطات تكلفة البناء في جدة (ريال/م²) — 2024-2025
 CONSTRUCTION_COSTS = {
@@ -85,7 +86,6 @@ def calculate_feasibility(
     """
     حساب الجدوى المالية الكاملة لمشروع عقاري.
     """
-    from typing import Optional
     
     # === 1. التكاليف ===
     estimated_land_cost = land_area_sqm * land_price_per_sqm
@@ -355,7 +355,6 @@ def generate_recommendation(
     estimated_price: Optional[float] = None
 ) -> dict:
     """توليد توصية استثمارية احترافية"""
-    from typing import Optional
     
     # حساب سكور من 100 بناءً على 4 محاور
     roi_score = min(40, (roi / 12) * 40)
