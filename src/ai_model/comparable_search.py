@@ -86,6 +86,8 @@ class ComparableSearch:
 
         # تجهيز قائمة المقارنات
         results = []
+        if not filtered.empty:
+            filtered = filtered.drop_duplicates(subset=['الحي', 'المساحة (م2)', 'السعر (ريال)', 'التاريخ'])
         for _, row in filtered.head(limit * 2).iterrows():
             # استخدام بذرة مستقرة بناءً على سعر الصفقة الحقيقي لضمان استقرار الخصائص عند إعادة التحميل
             row_seed = int(float(row.get('السعر (ريال)', 123456))) % 100000

@@ -209,7 +209,7 @@ function recencyScore(date: string) {
 export function getComparableTransactions(input: PropertyInput, limit = 10): Comparable[] {
   const candidates = getTransactions().filter((item) => item.city === input.city);
 
-  return candidates
+  const mapped = candidates
     .map((item) => {
       const districtMatch = item.district === input.district ? 1 : 0;
       const typeMatch = item.propertyType === input.propertyType ? 1 : 0;
@@ -229,6 +229,17 @@ export function getComparableTransactions(input: PropertyInput, limit = 10): Com
       };
     })
     .filter((item) => item.similarityScore >= 35)
-    .sort((a, b) => b.similarityScore - a.similarityScore)
-    .slice(0, limit);
+    .sort((a, b) => b.similarityScore - a.similarityScore);
+
+  const unique: Comparable[] = [];
+  const seen = new Set<string>();
+  for (const item of mapped) {
+    const key = `${item.district}-${item.areaSqm}-${item.totalPrice}-${item.date}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      unique.push(item);
+    }
+  }
+
+  return unique.slice(0, limit);
 }
